@@ -56,12 +56,15 @@ def ssd_vgg16(config, args, callbacks):
     )
 
     if training_config["optimizer"]["name"] == "adam":
+        lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+            initial_learning_rate=args.learning_rate,
+            decay_steps=10000,
+            decay_rate=0.9)
         optimizer = Adam(
-            learning_rate=args.learning_rate,
+            learning_rate=lr_schedule,
             beta_1=training_config["optimizer"]["beta_1"],
             beta_2=training_config["optimizer"]["beta_2"],
-            epsilon=training_config["optimizer"]["epsilon"],
-            decay=training_config["optimizer"]["decay"]
+            epsilon=training_config["optimizer"]["epsilon"]
         )
     elif training_config["optimizer"]["name"] == "sgd":
         optimizer = SGD(
